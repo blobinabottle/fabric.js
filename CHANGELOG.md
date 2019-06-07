@@ -1,5 +1,70 @@
 # Changelog
 
+## [3.1.0]
+- Fix: unbreak IE10. [#5678](https://github.com/fabricjs/fabric.js/pull/5678)
+- Improvement: Support scientific notation with uppercase E. [#5731](https://github.com/fabricjs/fabric.js/pull/5731)
+- Add: PencilBrush brush now support `decimate` property to remove dots that are too near to each other. [#5718](https://github.com/fabricjs/fabric.js/pull/5718)
+
+## [3.0.0]
+- Breaking: removed support for node 4 and 6. [#5356](https://github.com/fabricjs/fabric.js/pull/5356)
+- Breaking: changed objectCaching meaning to disable caching only if possible. [#5566](https://github.com/fabricjs/fabric.js/pull/5566)
+- Breaking: private method `_setLineStyle` can set only empty object now [#5588](https://github.com/fabricjs/fabric.js/pull/5588)
+- Breaking: private method `_getLineStyle` can only return boolean now [#5588](https://github.com/fabricjs/fabric.js/pull/5588)
+- Fix: splitByGrapheme can now handle cursor properly [#5588](https://github.com/fabricjs/fabric.js/pull/5588)
+- Add: Added hasStroke and hasFill, helper methods for decisions on caching and for devs, change image shouldCache method [#5567](https://github.com/fabricjs/fabric.js/pull/5567)
+- Fix: Canvas toObject won't throw error now if there is a clipPath [#5556](https://github.com/fabricjs/fabric.js/pull/5556)
+- Add: added `nonScaling` property to shadow class [#5558](https://github.com/fabricjs/fabric.js/pull/5558)
+- Fix: fixed import of Rect from SVG when has 0 dimensions. [#5582](https://github.com/fabricjs/fabric.js/pull/5582)
+- Fix: Shadow offset in dataurl export with retina [#5593](https://github.com/fabricjs/fabric.js/pull/5593)
+- Fix: Text can be used as clipPath in SVG export (output is not correct yet) [#5591](https://github.com/fabricjs/fabric.js/pull/5591)
+- Add: Fabric.disableStyleCopyPasting to disable style transfers on copy-paste of itext [#5590](https://github.com/fabricjs/fabric.js/pull/5590)
+- Fix: avoid adding quotes to fontFamily containing a coma [#5624](https://github.com/fabricjs/fabric.js/pull/5624)
+- Fix: strokeUniform and cache dimensions [#5626](https://github.com/fabricjs/fabric.js/pull/5626)
+- Fix: Do not call onSelect on objects that won't be part of the selection [#5632](https://github.com/fabricjs/fabric.js/pull/5632)
+- Fix: fixed handling of empty lines in splitByGrapheme [#5645](https://github.com/fabricjs/fabric.js/pull/5645)
+- Fix: Textbox selectable property not restored after exitEditing [#5655](https://github.com/fabricjs/fabric.js/pull/5655)
+- Fix: 'before:selection:cleared' event gets target in the option passed [#5658](https://github.com/fabricjs/fabric.js/pull/5658)
+- Added: enablePointerEvents options to Canvas activates pointer events [#5589](https://github.com/fabricjs/fabric.js/pull/5589)
+- Fix: Polygon/Polyline/Path respect points position when initializing [#5668](https://github.com/fabricjs/fabric.js/pull/5668)
+- Fix: Do not load undefine objects in group/canvas array when restoring from JSON or SVG. [#5684](https://github.com/fabricjs/fabric.js/pull/5684)
+- Improvement: support for canvas background or overlay as gradient [#5684](https://github.com/fabricjs/fabric.js/pull/5684)
+- Fix: properly restore clipPath when restoring from JSON [#5641](https://github.com/fabricjs/fabric.js/pull/5641)
+- Fix: respect chainable attribute in observable mixin [#5606](https://github.com/fabricjs/fabric.js/pull/5606)
+
+## [2.7.0]
+- Add: strokeUniform property, avoid stroke scaling with paths [#5473](https://github.com/fabricjs/fabric.js/pull/5473)
+- Fix: fix bug in image setSrc [#5502](https://github.com/fabricjs/fabric.js/pull/5502)
+- Add: strokeUniform import/export svg [#5527](https://github.com/fabricjs/fabric.js/pull/5527)
+- Fix: GraphemeSplit and toSvg for circle [#5544](https://github.com/fabricjs/fabric.js/pull/5544)
+- Improvement: support running in a XML document [#5530](https://github.com/fabricjs/fabric.js/pull/5530)
+
+## [2.6.0]
+- Fix: avoid ie11 to throw on weird draw images [#5428](https://github.com/fabricjs/fabric.js/pull/5428)
+- Fix: a rare case of invisible clipPath [#5477](https://github.com/fabricjs/fabric.js/pull/5477)
+- Fix: testability of code under node when webgl is involved [#5478](https://github.com/fabricjs/fabric.js/pull/5478)
+- Add: Grapeheme text wrapping for Textbox (Textbox.splitByGrapheme) [#5479](https://github.com/fabricjs/fabric.js/pull/5479)
+- Add: fabric.Object.toCanvasElement [#5481](https://github.com/fabricjs/fabric.js/pull/5481)
+
+## [2.5.0]
+- Fix: textbox transform report newScaleX and newScaleY values [#5464](https://github.com/fabricjs/fabric.js/pull/5464)
+- Fix: export of svg and gradient with transforms [#5456](https://github.com/fabricjs/fabric.js/pull/5456)
+- Fix: detection of controls in perPixelTargetFind + cache [#5455](https://github.com/fabricjs/fabric.js/pull/5455)
+- Add: added canvas.toCanvasElement method [#5452](https://github.com/fabricjs/fabric.js/pull/5452)
+
+## [2.4.6]
+- Fix: unbreak the svg export broken in 2.4.5 [#5438](https://github.com/fabricjs/fabric.js/pull/5438)
+
+## [2.4.5]
+- Fix: svg import/export for canvas+clipPath and letterspacing. [#5424](https://github.com/fabricjs/fabric.js/pull/5424)
+- Fix: avoid stroke dash from group selection to leak on upper canvas [#5392](https://github.com/fabricjs/fabric.js/pull/5392)
+
+## [2.4.4]
+- Fix: add clipPath to stateful cache check. [#5384](https://github.com/fabricjs/fabric.js/pull/5384)
+- Fix: restore draggability of small objects [#5379](https://github.com/fabricjs/fabric.js/pull/5379)
+- Improvement: Added strokeDashOffset to objects and from SVG import. [#5398](https://github.com/fabricjs/fabric.js/pull/5398)
+- Fix: do not mark objects as invisible if strokeWidth is > 0 [#5382](https://github.com/fabricjs/fabric.js/pull/5382)
+- Improvement: Better gradients parsing with xlink:href [#5357](https://github.com/fabricjs/fabric.js/pull/5357)
+
 ## [2.4.3]
 - Fix: Shift click and onSelect function [#5348](https://github.com/fabricjs/fabric.js/pull/5348)
 - Fix: Load from Json from images with filters and resize filters [#5346](https://github.com/fabricjs/fabric.js/pull/5346)

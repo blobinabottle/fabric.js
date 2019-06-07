@@ -410,15 +410,18 @@
     enlivenObjects: function(objects, callback, namespace, reviver) {
       objects = objects || [];
 
-      function onLoaded() {
-        if (++numLoadedObjects === numTotalObjects) {
-          callback && callback(enlivenedObjects);
-        }
-      }
-
       var enlivenedObjects = [],
           numLoadedObjects = 0,
           numTotalObjects = objects.length;
+
+      function onLoaded() {
+        if (++numLoadedObjects === numTotalObjects) {
+          callback && callback(enlivenedObjects.filter(function(obj) {
+            // filter out undefined objects (objects that gave error)
+            return obj;
+          }));
+        }
+      }
 
       if (!numTotalObjects) {
         callback && callback(enlivenedObjects);
@@ -583,6 +586,7 @@
 
     /**
      * Creates a canvas element that is a copy of another and is also painted
+     * @param {CanvasElement} canvas to copy size and content of
      * @static
      * @memberOf fabric.util
      * @return {CanvasElement} initialized canvas element
@@ -593,6 +597,19 @@
       newCanvas.height = canvas.height;
       newCanvas.getContext('2d').drawImage(canvas, 0, 0);
       return newCanvas;
+    },
+
+    /**
+     * since 2.6.0 moved from canvas instance to utility.
+     * @param {CanvasElement} canvasEl to copy size and content of
+     * @param {String} format 'jpeg' or 'png', in some browsers 'webp' is ok too
+     * @param {Number} quality <= 1 and > 0
+     * @static
+     * @memberOf fabric.util
+     * @return {String} data url
+     */
+    toDataURL: function(canvasEl, format, quality) {
+      return canvasEl.toDataURL('image/' + format, quality);
     },
 
     /**
@@ -837,6 +854,19 @@
 
     findScaleToCover: function(source, destination) {
       return Math.max(destination.width / source.width, destination.height / source.height);
+    },
+
+    /**
+     * given an array of 6 number returns something like `"matrix(...numbers)"`
+     * @memberOf fabric.util
+     * @param {Array} trasnform an array with 6 numbers
+     * @return {String} transform matrix for svg
+     * @return {Object.y} Limited dimensions by Y
+     */
+    matrixToSVG: function(transform) {
+      return 'matrix(' + transform.map(function(value) {
+        return fabric.util.toFixed(value, fabric.Object.NUM_FRACTION_DIGITS);
+      }).join(' ') + ')';
     }
   };
 })(typeof exports !== 'undefined' ? exports : this);

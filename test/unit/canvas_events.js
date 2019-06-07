@@ -298,6 +298,39 @@
     assert.equal(count2, 1, 'object:moved fired');
   });
 
+  QUnit.test('drag small object when mousemove + drag, not active', function(assert) {
+    var e = { clientX: 2, clientY: 2, which: 1 };
+    var e1 = { clientX: 4, clientY: 4, which: 1 };
+    var e2 = { clientX: 6, clientY: 6, which: 1 };
+    var rect = new fabric.Rect({ left: 0, top: 0, width: 3, height: 3, strokeWidth: 0 });
+    canvas.add(rect);
+    canvas.__onMouseDown(e);
+    canvas.__onMouseMove(e1);
+    canvas.__onMouseMove(e2);
+    canvas.__onMouseUp(e2);
+    assert.equal(rect.top, 4, 'rect moved by 4 pixels top');
+    assert.equal(rect.left, 4, 'rect moved by 4 pixels left');
+    assert.equal(rect.scaleX, 1, 'rect did not scale Y');
+    assert.equal(rect.scaleY, 1, 'rect did not scale X');
+  });
+
+  QUnit.test('scale small object when mousemove + drag, active', function(assert) {
+    var e = { clientX: 2, clientY: 2, which: 1 };
+    var e1 = { clientX: -4, clientY: -4, which: 1 };
+    var e2 = { clientX: -6, clientY: -6, which: 1 };
+    var rect = new fabric.Rect({ left: 0, top: 0, width: 3, height: 3, strokeWidth: 0 });
+    assert.equal(rect.scaleX, 1, 'rect not scaled X');
+    assert.equal(rect.scaleY, 1, 'rect not scaled Y');
+    canvas.add(rect);
+    canvas.setActiveObject(rect);
+    canvas.__onMouseDown(e);
+    canvas.__onMouseMove(e1);
+    canvas.__onMouseMove(e2);
+    canvas.__onMouseUp(e2);
+    assert.equal(rect.scaleX, 3, 'rect scaled X');
+    assert.equal(rect.scaleY, 3, 'rect scaled Y');
+  });
+
   QUnit.test('avoid multiple bindings', function(assert) {
     var c = new fabric.Canvas();
     var eventsArray = [
@@ -498,6 +531,50 @@
       c.cancelRequestedRender();
       done();
     }, 200);
+  });
+
+  QUnit.test('mouseEnter removes _hoveredTarget', function(assert) {
+    var event = fabric.document.createEvent('MouseEvent');
+    event.initEvent('mouseenter', true, true);
+    var c = new fabric.Canvas();
+    c._hoveredTarget = new fabric.Object();
+    c.upperCanvasEl.dispatchEvent(event);
+    assert.equal(c._hoveredTarget, null, '_hoveredTarget has been removed');
+  });
+
+  QUnit.test('mouseEnter does not remove _hoveredTarget if a transform is happening', function(assert) {
+    var event = fabric.document.createEvent('MouseEvent');
+    event.initEvent('mouseenter', true, true);
+    var c = new fabric.Canvas();
+    var obj = new fabric.Object();
+    c._hoveredTarget = obj;
+    c.currentTransform = {};
+    c.upperCanvasEl.dispatchEvent(event);
+    assert.equal(c._hoveredTarget, obj, '_hoveredTarget has been removed');
+  });
+
+  QUnit.test('mouseEnter removes __corner', function(assert) {
+    var event = fabric.document.createEvent('MouseEvent');
+    event.initEvent('mouseenter', true, true);
+    var c = new fabric.Canvas();
+    var obj = new fabric.Object({ top: 100, left: 100 });
+    c.add(obj);
+    c.setActiveObject(obj);
+    obj.__corner = 'test';
+    c.upperCanvasEl.dispatchEvent(event);
+    assert.equal(obj.__corner, 0, '__corner has been resetted from activeObject');
+  });
+
+  QUnit.test('mouseEnter does not removes __corner if there is a transform', function(assert) {
+    var event = fabric.document.createEvent('MouseEvent');
+    event.initEvent('mouseenter', true, true);
+    var c = new fabric.Canvas();
+    var obj = new fabric.Object();
+    c.currentTransform = {};
+    c.setActiveObject(obj);
+    obj.__corner = 'test';
+    c.upperCanvasEl.dispatchEvent(event);
+    assert.equal(obj.__corner, 'test', '__corner has not been reset');
   });
 
   QUnit.test('avoid multiple events on window', function(assert) {

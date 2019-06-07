@@ -135,10 +135,8 @@
      */
     getSvgTransform: function(full, additionalTransform) {
       var transform = full ? this.calcTransformMatrix() : this.calcOwnMatrix(),
-          svgTransform = transform.map(function(value) {
-            return toFixed(value, fabric.Object.NUM_FRACTION_DIGITS);
-          }).join(' ');
-      return 'transform="matrix(' + svgTransform + ')' +
+          svgTransform = 'transform="' + fabric.util.matrixToSVG(transform);
+      return svgTransform +
         (additionalTransform || '') + this.getSvgTransformMatrix() + '" ';
     },
 
@@ -147,7 +145,7 @@
      * @return {String}
      */
     getSvgTransformMatrix: function() {
-      return this.transformMatrix ? ' matrix(' + this.transformMatrix.join(' ') + ')' : '';
+      return this.transformMatrix ? ' ' + fabric.util.matrixToSVG(this.transformMatrix) : '';
     },
 
     _setSVGBg: function(textBgRects) {
@@ -213,10 +211,12 @@
           styleInfo = noStyle ? '' : 'style="' + this.getSvgStyles() + '" ',
           shadowInfo = withShadow ? 'style="' + this.getSvgFilter() + '" ' : '',
           clipPath = this.clipPath,
+          vectorEffect = this.strokeUniform ? 'vector-effect="non-scaling-stroke" ' : '',
           absoluteClipPath = this.clipPath && this.clipPath.absolutePositioned,
           commonPieces, markup = [], clipPathMarkup,
           // insert commons in the markup, style and svgCommons
-          index = objectMarkup.indexOf('COMMON_PARTS');
+          index = objectMarkup.indexOf('COMMON_PARTS'),
+          additionalTransform = options.additionalTransform;
       if (clipPath) {
         clipPath.clipPathId = 'CLIPPATH_' + fabric.Object.__uid++;
         clipPathMarkup = '<clipPath id="' + clipPath.clipPathId + '" >\n' +
@@ -236,14 +236,16 @@
       );
       commonPieces = [
         styleInfo,
-        noStyle ? '' : this.addPaintOrder(), ' '
+        vectorEffect,
+        noStyle ? '' : this.addPaintOrder(), ' ',
+        additionalTransform ? 'transform="' + additionalTransform + '" ' : '',
       ].join('');
       objectMarkup[index] = commonPieces;
       if (this.fill && this.fill.toLive) {
-        markup.push(this.fill.toSVG(this, false));
+        markup.push(this.fill.toSVG(this));
       }
       if (this.stroke && this.stroke.toLive) {
-        markup.push(this.stroke.toSVG(this, false));
+        markup.push(this.stroke.toSVG(this));
       }
       if (this.shadow) {
         markup.push(this.shadow.toSVG(this));
