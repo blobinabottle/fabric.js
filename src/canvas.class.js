@@ -907,7 +907,7 @@
 
       transform.newScaleX = scaleX;
       transform.newScaleY = scaleY;
-      if (by === 'x' && target instanceof fabric.Textbox) {
+      if (fabric.Textbox && by === 'x' && target instanceof fabric.Textbox) {
         var w = target.width * (localMouse.x / _dim.x);
         if (w >= target.getMinWidth()) {
           scaled = w !== target.width;
@@ -1406,7 +1406,8 @@
         height: height + 'px',
         left: 0,
         top: 0,
-        'touch-action': this.allowTouchScrolling ? 'manipulation' : 'none'
+        'touch-action': this.allowTouchScrolling ? 'manipulation' : 'none',
+        '-ms-touch-action': this.allowTouchScrolling ? 'manipulation' : 'none'
       });
       element.width = width;
       element.height = height;
@@ -1719,10 +1720,5 @@
     if (prop !== 'prototype') {
       fabric.Canvas[prop] = fabric.StaticCanvas[prop];
     }
-  }
-
-  if (fabric.isTouchSupported) {
-    /** @ignore */
-    fabric.Canvas.prototype._setCursorFromEvent = function() { };
   }
 })();
